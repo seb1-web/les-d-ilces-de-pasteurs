@@ -9,7 +9,10 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import boulangerie2 from "../assets/img/boulangerie2.png";
+import logo_V2_Noel from "../assets/img/logo_V2_Noel.png";
+import logo_V_Noel_Photoroom from "../assets/img/logo_V_Noel_Photoroom.png";
 const MotionImage = motion.img;
+import ChristmasCarousel from '@/components/ChristmasCarousel';
 import {
   Menu,
   X,
@@ -56,7 +59,7 @@ export default function HomePage() {
             <div className="flex items-center">
                   <Link href="/" className="block">
                     <motion.img
-                      src={boulangerie2.src}
+                      src={logo_V2_Noel.src}
                       alt="Les Délices de Pasteur"
                       className="h-[150px] w-auto object-contain cursor-pointer"
                       initial={{ opacity: 0, scale: 0.9 }}
@@ -175,9 +178,9 @@ export default function HomePage() {
               whileHover={{ scale: 1.05 }}
             >
               <MotionImage
-                src={boulangerie2.src}   // ✅ string
+                src={logo_V_Noel_Photoroom.src}   // ✅ string
                 alt="Les Délices de Pasteur"
-                className="mx-auto max-h-80 w-auto object-contain invert drop-shadow"
+                className="mx-auto max-h-80 w-auto object-contain drop-shadow"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8 }}
@@ -191,6 +194,23 @@ export default function HomePage() {
               
             </motion.div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Noel Carousel */}
+      <section id="noel" className="py-16 lg:py-24 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl lg:text-4xl serif-font font-bold text-[var(--bakery-dark)] mb-4">Photos de Noël 🎄</h2>
+            <div className="w-24 h-1 bg-[var(--bakery-brown)] mx-auto mb-4"></div>
+          </div>
+          <ChristmasCarousel images={[
+            '/Images/Noel1.jpg',
+            '/Images/Noel2.jpg',
+            '/Images/Noel3.jpg',
+            '/Images/Noel4.jpg',
+            
+          ]} interval={4500} />
         </div>
       </section>
 
