@@ -1,0 +1,16 @@
+{
+  "project": "taste-skill",
+  "repository": "https://github.com/Leonxlnx/taste-skill",
+  "commit": "f6b76575f949707b4e3c37cd86cb44b0b98643e8",
+  "version": "2.5.1",
+  "license": "MIT",
+  "copiedOn": "2026-11-21",
+  "modified": false,
+  "scope": "Unmodified loader, shared helpers, and picture-develops film moment only. React lifecycle adapter is src/components/PhotoMoment.tsx.",
+  "sha256": {
+    "moments.js": "5c38a832b7e7b4e561c4336c75628e36915dab6f1b64ffa7af50b6b1f49766da",
+    "lib.js": "22c172166ded3c0ea70925e9a04c37baac291ca6fa9b5a0e4c487a52acf69220",
+    "picture-develops/moment.js": "dbb1d080df3b2ed139850f863ae3b5ac25d5191f1c1fb7092591bb6a404910c4",
+    "picture-develops/moment.css": "953f260d8501a9b3fb621cbd0dbf99512457ed41365bfe1c8d74814d5af6968e"
+  }
+}

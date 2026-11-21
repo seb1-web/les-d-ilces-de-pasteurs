@@ -1,106 +1,38 @@
-import React, { useEffect, useRef, useState } from 'react';
-
-type Props = {
-  images?: string[];
-  interval?: number; // ms
-};
-
-export default function ChristmasCarousel({
-  images = ['/Images/Noel1.jpg', '/Images/Noel2.jpg', '/Images/Noel3.jpg', '/Images/Noel4.jpg', ],
-  interval = 4500,
-}: Props) {
+'use client';
+import { useEffect, useRef, useState } from 'react';
+import { ArrowLeft, ArrowRight, Pause, Play } from 'lucide-react';
+const photos = [
+  { src: '/Images/optimized/Noel3.webp', alt: 'Sapin, guirlandes et décorations de Noël dans la boulangerie' },
+  { src: '/Images/optimized/Noel4.webp', alt: 'Pains et cadeaux de Noël présentés dans la boutique' },
+  { src: '/Images/optimized/Noel1.webp', alt: 'Éclairs et pâtisseries dans la vitrine décorée pour Noël' },
+  { src: '/Images/optimized/Noel2.webp', alt: 'Décorations de Noël et diplôme de la boulangerie' },
+];
+export default function ChristmasCarousel() {
   const [index, setIndex] = useState(0);
-  const timerRef = useRef<number | null>(null);
-  const touchStartX = useRef<number | null>(null);
-
+  const [playing, setPlaying] = useState(false);
+  const [reduced, setReduced] = useState(false);
+  const start = useRef<number | null>(null);
   useEffect(() => {
-    if (timerRef.current) window.clearInterval(timerRef.current);
-    timerRef.current = window.setInterval(() => {
-      setIndex((i) => (i + 1) % images.length);
-    }, interval);
-    return () => {
-      if (timerRef.current) window.clearInterval(timerRef.current);
-    };
-  }, [images.length, interval]);
-
-  const prev = () => setIndex((i) => (i - 1 + images.length) % images.length);
-  const next = () => setIndex((i) => (i + 1) % images.length);
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-  const onTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current == null) return;
-    const delta = e.changedTouches[0].clientX - touchStartX.current;
-    if (Math.abs(delta) > 50) {
-      if (delta > 0) prev();
-      else next();
-    }
-    touchStartX.current = null;
-  };
-
-  return (
-    <div className="relative w-full max-w-4xl mx-auto">
-      <div
-        className="overflow-hidden relative rounded-lg"
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
-      >
-        <div
-          className="flex transition-transform duration-500"
-          style={{ transform: `translateX(-${index * 100}%)` }}
-        >
-          {images.map((src, i) => (
-            <div key={i} className="min-w-full relative h-80 sm:h-[36rem] lg:h-[44rem] flex items-center justify-center bg-black/5 overflow-hidden">
-              {/* background fill (blur + dim) */}
-              <img
-                src={src}
-                alt={`Noël ${i + 1} background`}
-                className="absolute inset-0 w-full h-full object-cover filter blur-sm brightness-75"
-              />
-
-              {/* centered full image (no crop) - larger */}
-              <img
-                src={src}
-                alt={`Noël ${i + 1}`}
-                className="relative w-auto max-h-[92%] max-w-[95%] object-contain z-10"
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Prev / Next */}
-        <button
-          aria-label="Précédent"
-          onClick={prev}
-          className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 text-[var(--bakery-dark)] rounded-full p-2 shadow hover:scale-105"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M12.293 16.293a1 1 0 010-1.414L15.586 11H4a1 1 0 110-2h11.586l-3.293-3.293a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clipRule="evenodd" />
-          </svg>
-        </button>
-        <button
-          aria-label="Suivant"
-          onClick={next}
-          className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 text-[var(--bakery-dark)] rounded-full p-2 shadow hover:scale-105"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 rotate-180" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M12.293 16.293a1 1 0 010-1.414L15.586 11H4a1 1 0 110-2h11.586l-3.293-3.293a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clipRule="evenodd" />
-          </svg>
-        </button>
-      </div>
-
-      {/* Dots */}
-      <div className="flex justify-center gap-2 mt-4">
-        {images.map((_, i) => (
-          <button
-            key={i}
-            aria-label={`Aller à la diapositive ${i + 1}`}
-            onClick={() => setIndex(i)}
-            className={`w-3 h-3 rounded-full ${i === index ? 'bg-[var(--bakery-brown)]' : 'bg-gray-300'}`}
-          />
-        ))}
-      </div>
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const change = () => { setReduced(media.matches); if (media.matches) setPlaying(false); };
+    change(); media.addEventListener('change', change);
+    return () => media.removeEventListener('change', change);
+  }, []);
+  useEffect(() => {
+    if (!playing || reduced) return;
+    const timer = window.setInterval(() => setIndex(i => (i + 1) % photos.length), 4500);
+    return () => window.clearInterval(timer);
+  }, [playing, reduced]);
+  const go = (i: number) => { setIndex((i + photos.length) % photos.length); setPlaying(false); };
+  return <div className="christmas-gallery" role="region" aria-roledescription="carrousel" aria-label="Photos de Noël" onMouseEnter={() => setPlaying(false)} onFocusCapture={e => { if (!e.currentTarget.contains(e.relatedTarget)) setPlaying(false); }}>
+    <div className="christmas-photo" onTouchStart={e => { start.current = e.touches[0].clientX; }} onTouchEnd={e => { if (start.current !== null && Math.abs(e.changedTouches[0].clientX - start.current) > 50) go(index + (e.changedTouches[0].clientX < start.current ? 1 : -1)); start.current = null; }}>
+      {photos.map((photo, i) => <img key={photo.src} src={photo.src} alt={photo.alt} width="1000" height="1000" loading="lazy" hidden={i !== index} data-source="client" data-subject="Décorations de Noël" />)}
     </div>
-  );
+    <div className="gallery-controls"><div className="gallery-count" aria-live={playing ? 'off' : 'polite'}><span>0{index + 1}</span><span className="count-rule" /><span>0{photos.length}</span></div><div className="gallery-buttons">
+      {!reduced && <button className="icon-button" type="button" onClick={() => setPlaying(!playing)} aria-label={playing ? 'Mettre le diaporama en pause' : 'Lancer le diaporama'}>{playing ? <Pause size={18} /> : <Play size={18} />}</button>}
+      <button className="icon-button" type="button" onClick={() => go(index - 1)} aria-label="Photo de Noël précédente"><ArrowLeft size={21} /></button>
+      <button className="icon-button" type="button" onClick={() => go(index + 1)} aria-label="Photo de Noël suivante"><ArrowRight size={21} /></button>
+    </div></div>
+    <div className="gallery-thumbnails">{photos.map((photo, i) => <button type="button" key={photo.src} aria-label={`Afficher la photo de Noël ${i + 1}`} aria-pressed={i === index} onClick={() => go(i)}><img src={photo.src} alt="" width="100" height="75" loading="lazy" /></button>)}</div>
+  </div>;
 }

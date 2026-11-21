@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Les Délices de Pasteur
 
-## Getting Started
+Site de la boulangerie du 37 boulevard Pasteur à Paris : accueil, carte, contact et journal photographique. Refonte de novembre 2026 conservant la palette et les photographies/décorations de Noël du dépôt.
 
-First, run the development server:
+## Lancer le site
 
-```bash
+Node.js 22 et npm. Le fichier `package-lock.json` fait référence.
+
+```sh
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ouvrir http://127.0.0.1:3000. Pour vérifier la version de production :
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sh
+npm run build
+npm run start -- --hostname 127.0.0.1
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Vérifications
 
-## Learn More
+```sh
+npm run lint
+npm run test:e2e
+```
 
-To learn more about Next.js, take a look at the following resources:
+Les tests E2E nécessitent le serveur sur le port 3000 et Chrome installé. Ils couvrent les quatre routes à 320, 390, 768 et 1440 px, les images locales, les 115 produits, recherche et filtres avec historique navigateur, menu mobile/clavier, galerie Noël (lecture/pause/mouvement réduit), journal, carte à la demande et contrôles axe WCAG A/AA. Le service Google est simulé dans ce test : sa disponibilité extérieure n’est pas certifiée. Rapports dans `artifacts/e2e/`, ignorés par Git.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contenus
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `src/data/menu.ts` : 115 entrées et prix conservés à l’identique du dépôt initial. Le prix nul de L’ardéchois s’affiche « Prix en boutique ».
+- `src/lib/business.ts` : adresse, téléphone, liens, horaires communs aux pages.
+- `public/Images/optimized` : WebP servis par le site, en respectant la majuscule de `Images` pour Linux. Les originaux sont conservés.
+- `npm run prepare-images` : régénération des images via Sharp, sans modification des originaux.
+- `public/design/moments` : effet photographique Taste, licence et provenance incluses.
 
-## Deploy on Vercel
+Les horaires restent ceux de l’ancien accueil et doivent être confirmés par la boutique : d’autres sources donnent un autre jour de fermeture. Les doublons de tarifs dans la carte source n’ont pas été arbitrairement corrigés.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Aucun paiement, panier, inscription à une newsletter ou formulaire d’envoi n’était fonctionnel dans le dépôt initial. Les liens réels de téléphone, Facebook, itinéraire et contact sont utilisés. Les articles, auteurs et avis appartenant apparemment à une autre enseigne ont été remplacés par les photos réelles de la maison.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Hébergement
+
+Application Next.js 16. Le fichier Netlify utilise npm et le plugin Next officiel. Pour les liens de partage, définir `NEXT_PUBLIC_SITE_URL` avec le domaine réel ; les variables Netlify `URL` et Vercel `VERCEL_PROJECT_PRODUCTION_URL` sont également prises en charge. Aucun domaine n’est inventé. Hors hébergement configuré, le repli est localhost.
+
+La refonte est préparée sur une branche dédiée : fusion et publication en production sont des étapes distinctes. Suivi des décisions et preuves : coffre Obsidian `S:\seby\seby\Les Délices de Pasteur`.
